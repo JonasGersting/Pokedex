@@ -57,14 +57,26 @@ function showInfo(i) {
     let backgroundColor = document.getElementById(`pokemon${i}`).style.backgroundColor;
     let infoTop = document.getElementById('infoTop');
     infoTop.style.backgroundColor = `${backgroundColor}`;
+    let typeBanner = document.getElementById('infoTypes');
+    typeBanner.innerHTML = '';
     for (let j = 0; j < currentPokemon['types'].length; j++) {
         const type = currentPokemon['types'][j]['type']['name'];
-        let typeBanner = document.getElementById('infoTypes');
         typeBanner.innerHTML += `
             <div class="banner" style="background-color:${typesBackgroundColor}">${type}</div>
         `
     }
     createCanvas(backgroundColor, i);
+}
+
+function closeInfo() {
+    let pokemonInfoContainer = document.getElementById('infoContainer');
+    pokemonInfoContainer.classList.add('d-none');
+    let overlay = document.getElementById('overlay');
+    overlay.classList.add('d-none');
+    const canvas = document.getElementById('statChart');
+    canvas.remove();
+    let stats = document.getElementById('stats');
+    stats.innerHTML +=`<canvas width="200px" height="200px" id="statChart"></canvas>`;
 }
 
 
@@ -175,8 +187,8 @@ function createCanvas(backgroundColor, i) {
     const spAttack = currentPokemon['stats'][3]['base_stat'];
     const spDefense = currentPokemon['stats'][4]['base_stat'];
     const speed = currentPokemon['stats'][5]['base_stat'];
-    console.log(hp, attack, defense, spAttack, spDefense, speed)
-   
+    const newBackground = adjustRgbaOpacity(backgroundColor, 0.8);
+
     const data = {
         labels: [
             'HP',
@@ -190,7 +202,7 @@ function createCanvas(backgroundColor, i) {
             label: 'Base stats',
             data: [hp, attack, defense, spAttack, spDefense, speed],
             fill: true,
-            backgroundColor: `${backgroundColor}`,
+            backgroundColor: `${newBackground}`,
             borderColor: `${backgroundColor}`,
             pointBackgroundColor: `${backgroundColor}`,
             pointBorderColor: '#fff',
@@ -211,6 +223,28 @@ function createCanvas(backgroundColor, i) {
         }
     });
 }
+
+function adjustRgbaOpacity(rgbColor, opacity) {
+    // Extrahieren der RGB-Komponenten und der aktuellen Opacity
+    const match = rgbColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+
+    if (!match) {
+        throw new Error('Ungültiger RGBA-Farbcode. Erwartet wird ein Format wie "rgba(r, g, b, a)".');
+    }
+
+    const r = parseInt(match[1]);
+    const g = parseInt(match[2]);
+    const b = parseInt(match[3]);
+    const currentOpacity = parseFloat(match[4]);
+
+    // Anpassen der Opacity auf 0.8 (maximal 1, mindestens 0)
+    const newOpacity = Math.min(1, Math.max(0, opacity));
+
+    // Zusammenstellen des neuen RGBA-Strings
+    return `rgba(${r}, ${g}, ${b}, ${newOpacity})`;
+}
+
+
 
 
 
