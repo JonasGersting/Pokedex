@@ -6,9 +6,9 @@ body{
 
 .headline{
     width: 100%;
-    height: 200px;
+    height: 100px;
     background: red;
-    position: relative;
+    top: 0;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -16,13 +16,58 @@ body{
     color: white;
 }
 
-.headline:before {
+  .headline:before{
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    border-bottom: 40px solid #fff;
-    border-right: 40px solid red;
-    width: 70%;
+    bottom: -40px;
+    right: 0;
+    border-bottom: 40px solid red;
+    border-left: 40px solid transparent;
+    width: 25%;
+    transform: rotateX(180deg);
   }
+
+  .pokemonImg{
+    max-width: 200px;
+    max-height: 200px;
+  }
+
+#pokemonContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+    margin-top: 64px;
+}
+
+.pokemonCell{
+    height: 400px;
+    width: 300px;
+    border: 1px solid lightgray;
+    margin: 8px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 16px;
+}
+
+.banner{
+    border: 1px solid lightgray;
+    border-radius: 16px;
+    padding: 8px;
+    min-width: 48px;
+    text-align: center;
+    margin-right: 16px;
+}
+
+.types{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 16px;
+}
 
