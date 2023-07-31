@@ -45,7 +45,6 @@ body {
 .pokemonCell {
     height: 400px;
     width: 300px;
-    border: 1px solid #d3d3d3;
     margin: 8px;
     display: flex;
     justify-content: center;
@@ -61,7 +60,10 @@ body {
     padding: 8px;
     min-width: 48px;
     text-align: center;
-    margin-right: 16px;
+    margin-right: 8px;
+    margin-left: 8px;
+    margin-bottom: 16px;
+    border: 1px solid white;
 }
 
 .types {
@@ -170,22 +172,26 @@ h3{
     height: 48px;
     width: 50%;
     text-align: center;
-    background-color: #bababa;
+    background-color: red;
     cursor: pointer;
-    color: black;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+.navBtn:hover{
+    background-color: rgb(105, 33, 33);
+}
+
 .navBtnLeft{
     border-bottom-left-radius: 32px;
-    border-right: 2px solid darkgrey;
+    border-right: 2px solid white;
 }
 
 .navBtnRight{
     border-bottom-right-radius: 32px;
-    border-left: 2px solid darkgrey;
+    border-left: 2px solid white;
 }
 
 canvas{

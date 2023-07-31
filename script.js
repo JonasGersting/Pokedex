@@ -17,7 +17,8 @@ async function loadPokemon() {
 
 function renderPokemon() {
     let pokemonContainer = document.getElementById('pokemonContainer');
-    for (let i = 0; i < allPokemons.length; i++) {
+    for (let i = min-1; i < max-1; i++) {
+        console.log(i)
         let currentPokemon = allPokemons[i];
         let pokemonName = (currentPokemon['name']).charAt(0).toUpperCase() + (currentPokemon['name']).slice(1);
         let imgUrl = currentPokemon['sprites']['other']['official-artwork']['front_default'];
@@ -41,6 +42,10 @@ function renderPokemon() {
     }
 }
 
+function searchPokemon() {
+    const searchInput = document.getElementById('search').value.toLowerCase();
+}
+
 function showInfo(i) {
     let pokemonInfoContainer = document.getElementById('infoContainer');
     pokemonInfoContainer.classList.remove('d-none');
@@ -57,6 +62,7 @@ function showInfo(i) {
     let backgroundColor = document.getElementById(`pokemon${i}`).style.backgroundColor;
     let infoTop = document.getElementById('infoTop');
     infoTop.style.backgroundColor = `${backgroundColor}`;
+    setNextBtn(i);
     let typeBanner = document.getElementById('infoTypes');
     typeBanner.innerHTML = '';
     for (let j = 0; j < currentPokemon['types'].length; j++) {
@@ -68,6 +74,29 @@ function showInfo(i) {
     createCanvas(backgroundColor, i);
 }
 
+function loadMore(){
+    min = min + 19;
+    max = max + 19;
+    loadPokemon();
+}
+
+
+function setNextBtn(i){
+    if ((i + 1) === allPokemons.length) {
+        i = 0;
+    }
+    let next = document.getElementById('next');
+    let nextPokemon = allPokemons[i+1];
+    next.innerHTML = `${(nextPokemon['name']).charAt(0).toUpperCase() + (nextPokemon['name']).slice(1)}`;
+    if (i === 0) {
+        i = allPokemons.length;
+    }
+    let last = document.getElementById('back');
+    let lastPokemon = allPokemons[i-1];
+    last.innerHTML = `${(lastPokemon['name']).charAt(0).toUpperCase() + (lastPokemon['name']).slice(1)}`;
+}
+
+
 function closeInfo() {
     let pokemonInfoContainer = document.getElementById('infoContainer');
     pokemonInfoContainer.classList.add('d-none');
@@ -77,6 +106,31 @@ function closeInfo() {
     canvas.remove();
     let stats = document.getElementById('stats');
     stats.innerHTML +=`<canvas width="200px" height="200px" id="statChart"></canvas>`;
+}
+
+
+function goNext(currentPokemon){
+    const canvas = document.getElementById('statChart');
+    canvas.remove();
+    let stats = document.getElementById('stats');
+    stats.innerHTML +=`<canvas width="200px" height="200px" id="statChart"></canvas>`;
+    let i = currentPokemon['id'] - 1;
+    if ((i + 1) === allPokemons.length) {
+        i = -1;
+    }
+    showInfo(i + 1);
+}
+
+function goBack(currentPokemon){
+    const canvas = document.getElementById('statChart');
+    canvas.remove();
+    let stats = document.getElementById('stats');
+    stats.innerHTML +=`<canvas width="200px" height="200px" id="statChart"></canvas>`;
+    let i = currentPokemon['id'] - 1;
+    if (i === 0) {
+        i = allPokemons.length;
+    }
+    showInfo(i - 1);
 }
 
 

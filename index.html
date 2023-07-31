@@ -14,7 +14,7 @@
     <div id="overlay" class="overlay d-none"></div>
     <div id="infoContainer" class="infoContainer d-none">
         <div id="infoTop" class="infoTop">
-            <img class="closeBtn" src="img/close.png" onclick="closeInfo()">
+            <img class="closeBtn" src="img/clsd.png" onclick="closeInfo()">
             <div class="infoOrder">
                 <h3 id="infoNumber">#001</h3>
                 <h2 id="infoName">Name</h2>
@@ -27,16 +27,17 @@
                 <canvas width="200px" height="200px" id="statChart"></canvas>
             </div>
             <div class="navigator">
-                <div onclick="goBack(currentPokemon)" class="navBtn navBtnLeft">links</div>
-                <div onclick="goNext(currentPokemon)" class="navBtn navBtnRight">rechts</div>
+                <div onclick="goBack(currentPokemon)" id="back" class="navBtn navBtnLeft">links</div>
+                <div onclick="goNext(currentPokemon)" id="next" class="navBtn navBtnRight">rechts</div>
             </div>
         </div>
     </div>
     <div class="headline">
         <h1>Pokedex</h1>
-        <input type="text" placeholder="Suche" id="input">
+        <input type="text" placeholder="Suche" id="search" oninput="searchPokemon()">
     </div>
     <div id="pokemonContainer"></div>
+    <button onclick="loadMore()">weiter Pokemon laden</button>
 </body>
 
 </html>
