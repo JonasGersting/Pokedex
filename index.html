@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,36 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
 </head>
+
 <body onload="loadPokemon()">
+    <div id="overlay" class="overlay d-none"></div>
+    <div id="infoContainer" class="infoContainer d-none">
+        <div id="infoTop" class="infoTop">
+            <img id="infoImg" src="">
+            <h3 id="infoNumber">#001</h3>
+            <h2 id="infoName">Name</h2>
+            <div class="infoTypes">fire</div>
+        </div>
+        <div id="infoBottom" class="infoBottom">
+            <h3>stats</h3>
+            <div id="stats" class="stats">
+
+            </div>
+            <div class="navigator">
+                <div class="navBtn">links</div>
+                <div class="navBtn">rechts</div>
+            </div>
+        </div>
+
+
+
+
+    </div>
     <div class="headline">
         <h1>Pokedex</h1>
         <input type="text" placeholder="Suche" id="input">
     </div>
-<div id="pokemonContainer"></div>
+    <div id="pokemonContainer"></div>
 </body>
+
 </html>
