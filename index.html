@@ -7,31 +7,30 @@
     <title>Pokedex</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.2/chart.umd.min.js"></script>
 </head>
 
 <body onload="loadPokemon()">
     <div id="overlay" class="overlay d-none"></div>
     <div id="infoContainer" class="infoContainer d-none">
         <div id="infoTop" class="infoTop">
+            <img class="closeBtn" src="img/close.png" onclick="closeInfo()">
+            <div class="infoOrder">
+                <h3 id="infoNumber">#001</h3>
+                <h2 id="infoName">Name</h2>
+                <div id="infoTypes" class="infoTypes"></div>
+            </div>
             <img id="infoImg" src="">
-            <h3 id="infoNumber">#001</h3>
-            <h2 id="infoName">Name</h2>
-            <div class="infoTypes">fire</div>
         </div>
         <div id="infoBottom" class="infoBottom">
-            <h3>stats</h3>
             <div id="stats" class="stats">
-
+                <canvas width="200px" height="200px" id="statChart"></canvas>
             </div>
             <div class="navigator">
-                <div class="navBtn">links</div>
-                <div class="navBtn">rechts</div>
+                <div class="navBtn navBtnLeft">links</div>
+                <div class="navBtn navBtnRight">rechts</div>
             </div>
         </div>
-
-
-
-
     </div>
     <div class="headline">
         <h1>Pokedex</h1>
