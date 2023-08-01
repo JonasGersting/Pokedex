@@ -84,7 +84,6 @@ body {
     min-width: 200px;
     max-width: 450px;
     max-height: 750px;
-    z-index: 2;
     left: 0;
     right: 0;
     top: 0;
@@ -145,7 +144,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: start;
-    margin-bottom: 70px;
+    margin-bottom: 110px;
 }
 
 .infoTypes {
@@ -160,8 +159,8 @@ h3 {
 
 .closeBtn {
     position: absolute;
-    right: 32px;
-    top: 32px;
+    right: 16px;
+    top: 16px;
     cursor: pointer;
 }
 
@@ -259,7 +258,7 @@ img#scrollToTopBtn {
     margin-bottom: 32px;
 }
 
-.loadPokemon:hover{
+.loadPokemon:hover {
     background-color: #4d4d4d;
 }
 
@@ -284,6 +283,30 @@ img#scrollToTopBtn {
     background: #4d4d4d;
 }
 
-#scrollToTopBtn:hover{
+#scrollToTopBtn:hover {
     filter: invert(20%) sepia(0%) saturate(0%) hue-rotate(9deg) brightness(88%) contrast(130%);
+}
+
+
+@media screen and (max-width:380px) {
+    .infoContainer {
+        height: 700px;
+    }
+
+    #infoTypes {
+        display: none;
+    }
+}
+
+@media screen and (max-width:340px) {
+    .infoContainer {
+        height: 650px;
+    }
+
+    @media screen and (max-width:300px) {
+        #headline {
+            display: none;
+        }
+
+    }
 }
