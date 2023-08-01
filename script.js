@@ -12,25 +12,16 @@ async function loadPokemon() {
         allPokemons.push(currentPokemon);
     }
     renderPokemon();
-    console.log(allPokemons)
 }
 
 function renderPokemon() {
     let pokemonContainer = document.getElementById('pokemonContainer');
     for (let i = min - 1; i < max - 1; i++) {
-        console.log(i)
         let currentPokemon = allPokemons[i];
         let pokemonName = (currentPokemon['name']).charAt(0).toUpperCase() + (currentPokemon['name']).slice(1);
         let imgUrl = currentPokemon['sprites']['other']['official-artwork']['front_default'];
         let number = ("000" + (i + 1)).slice(-3);
-        pokemonContainer.innerHTML += `
-        <div id="pokemon${i}" class="pokemonCell" onclick="showInfo(${i})">
-            <h2 id="name${i}">${pokemonName}</h2>
-            <img class="pokemonImg" src="${imgUrl}">
-            <div class="types" id="types${i}"></div>
-            <h3 id="id${i}">#${number}</h3>
-        </div>
-        `
+        pokemonContainer.innerHTML += returnContainer(i, pokemonName, imgUrl, number);
         for (let j = 0; j < currentPokemon['types'].length; j++) {
             const type = currentPokemon['types'][j]['type']['name'];
             let typeBanner = document.getElementById(`types${i}`);
@@ -43,6 +34,16 @@ function renderPokemon() {
 }
 
 
+function returnContainer(i, pokemonName, imgUrl, number) {
+    return `
+    <div id="pokemon${i}" class="pokemonCell" onclick="showInfo(${i})">
+        <h2 id="name${i}">${pokemonName}</h2>
+        <img class="pokemonImg" src="${imgUrl}">
+        <div class="types" id="types${i}"></div>
+        <h3 id="id${i}">#${number}</h3>
+    </div>
+    `
+}
 
 
 function searchPokemon() {
@@ -56,8 +57,8 @@ function searchPokemon() {
                 let pokemonCell = document.getElementById(`pokemon${i}`);
                 pokemonCell.style.display = 'none';
             } else {
-                    let pokemonCell = document.getElementById(`pokemon${i}`);
-                    pokemonCell.style.display = 'flex';
+                let pokemonCell = document.getElementById(`pokemon${i}`);
+                pokemonCell.style.display = 'flex';
             }
         }
     }
@@ -70,12 +71,55 @@ function searchPokemon() {
     }
 }
 
+function showInfo(i) {
+    const pokemonInfoContainer = document.getElementById('infoContainer');
+    pokemonInfoContainer.classList.remove('d-none');
+    const overlay = document.getElementById('overlay');
+    overlay.classList.remove('d-none');
+    currentPokemon = allPokemons[i];
+    displayBasicInfo(currentPokemon, i);
+    displayTypeBanners(currentPokemon, i);
+    createCanvasForPokemon(currentPokemon, i);
+}
+
+
+function displayBasicInfo(pokemon, i) {
+    const name = document.getElementById('infoName');
+    name.innerHTML = (pokemon['name']).charAt(0).toUpperCase() + (pokemon['name']).slice(1);
+    const infoNumber = document.getElementById('infoNumber');
+    infoNumber.innerHTML = `#${("000" + (i + 1)).slice(-3)}`;
+    const infoImg = document.getElementById('infoImg');
+    infoImg.src = pokemon['sprites']['other']['official-artwork']['front_default'];
+    const typesBackgroundColor = document.getElementById(`types${i}`).firstElementChild.style.backgroundColor;
+    const backgroundColor = document.getElementById(`pokemon${i}`).style.backgroundColor;
+    const infoTop = document.getElementById('infoTop');
+    infoTop.style.backgroundColor = backgroundColor;
+    setNextBtn(i);
+    setBackBtn(i);
+}
+
+
+function displayTypeBanners(pokemon, i) {
+    const typeBanner = document.getElementById('infoTypes');
+    typeBanner.innerHTML = '';
+
+    for (let j = 0; j < pokemon['types'].length; j++) {
+        const type = pokemon['types'][j]['type']['name'];
+        typeBanner.innerHTML += `
+            <div class="banner" style="background-color:${typesBackgroundColor}">${type}</div>
+        `;
+    }
+}
+
+
+function createCanvasForPokemon(pokemon, i) {
+    const backgroundColor = document.getElementById(`pokemon${i}`).style.backgroundColor;
+    createCanvas(backgroundColor, i);
+}
+
 
 function showInfo(i) {
-    let pokemonInfoContainer = document.getElementById('infoContainer');
-    pokemonInfoContainer.classList.remove('d-none');
-    let overlay = document.getElementById('overlay');
-    overlay.classList.remove('d-none');
+    changeDNone();
     currentPokemon = allPokemons[i];
     let name = document.getElementById('infoName');
     name.innerHTML = (currentPokemon['name']).charAt(0).toUpperCase() + (currentPokemon['name']).slice(1);
@@ -83,11 +127,26 @@ function showInfo(i) {
     infoNumber.innerHTML = `#${("000" + (i + 1)).slice(-3)}`;
     let infoImg = document.getElementById('infoImg');
     infoImg.src = currentPokemon['sprites']['other']['official-artwork']['front_default'];
-    let typesBackgroundColor = document.getElementById(`types${i}`).firstElementChild.style.backgroundColor;
     let backgroundColor = document.getElementById(`pokemon${i}`).style.backgroundColor;
     let infoTop = document.getElementById('infoTop');
     infoTop.style.backgroundColor = `${backgroundColor}`;
     setNextBtn(i);
+    setBackBtn(i);
+    changeBanner(i);
+    createCanvas(backgroundColor, i);
+}
+
+
+function changeDNone() {
+    let pokemonInfoContainer = document.getElementById('infoContainer');
+    pokemonInfoContainer.classList.remove('d-none');
+    let overlay = document.getElementById('overlay');
+    overlay.classList.remove('d-none');
+}
+
+
+function changeBanner(i){
+    let typesBackgroundColor = document.getElementById(`types${i}`).firstElementChild.style.backgroundColor;
     let typeBanner = document.getElementById('infoTypes');
     typeBanner.innerHTML = '';
     for (let j = 0; j < currentPokemon['types'].length; j++) {
@@ -96,8 +155,8 @@ function showInfo(i) {
             <div class="banner" style="background-color:${typesBackgroundColor}">${type}</div>
         `
     }
-    createCanvas(backgroundColor, i);
 }
+
 
 function loadMore() {
     min = min + 19;
@@ -113,6 +172,11 @@ function setNextBtn(i) {
     let next = document.getElementById('next');
     let nextPokemon = allPokemons[i + 1];
     next.innerHTML = `${(nextPokemon['name']).charAt(0).toUpperCase() + (nextPokemon['name']).slice(1)}`;
+
+}
+
+
+function setBackBtn(i) {
     if (i === 0) {
         i = allPokemons.length;
     }
@@ -146,6 +210,7 @@ function goNext(currentPokemon) {
     showInfo(i + 1);
 }
 
+
 function goBack(currentPokemon) {
     const canvas = document.getElementById('statChart');
     canvas.remove();
@@ -158,6 +223,85 @@ function goBack(currentPokemon) {
     showInfo(i - 1);
 }
 
+
+function createCanvas(backgroundColor, i) {
+    const ctx = document.getElementById('statChart');
+    currentPokemon = allPokemons[i];
+    const hp = currentPokemon['stats'][0]['base_stat'];
+    const attack = currentPokemon['stats'][1]['base_stat'];
+    const defense = currentPokemon['stats'][2]['base_stat'];
+    const spAttack = currentPokemon['stats'][3]['base_stat'];
+    const spDefense = currentPokemon['stats'][4]['base_stat'];
+    const speed = currentPokemon['stats'][5]['base_stat'];
+    const newBackground = adjustRgbaOpacity(backgroundColor, 0.8);
+    const data = {
+        labels: [
+            'HP',
+            'Attack',
+            'Defense',
+            'Sp. Attack',
+            'Sp. Defense',
+            'Speed',
+        ],
+        datasets: [{
+            label: 'Base stats',
+            data: [hp, attack, defense, spAttack, spDefense, speed],
+            fill: true,
+            backgroundColor: `${newBackground}`,
+            borderColor: `${backgroundColor}`,
+            pointBackgroundColor: `${backgroundColor}`,
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgb(255, 99, 132)'
+        }]
+    };
+    new Chart(ctx, {
+        type: 'radar',
+        data: data,
+        options: {
+            scales: {
+                r: {
+                    suggestedMin: 50,
+                    suggestedMax: 100
+                }
+            }
+        }
+    });
+}
+
+
+function adjustRgbaOpacity(rgbColor, opacity) {
+        const match = rgbColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    if (!match) {
+        throw new Error('Ungültiger RGBA-Farbcode. Erwartet wird ein Format wie "rgba(r, g, b, a)".');
+    }
+    const r = parseInt(match[1]);
+    const g = parseInt(match[2]);
+    const b = parseInt(match[3]);
+    const currentOpacity = parseFloat(match[4]);
+    const newOpacity = Math.min(1, Math.max(0, opacity));
+    return `rgba(${r}, ${g}, ${b}, ${newOpacity})`;
+}
+
+
+window.addEventListener('scroll', function () {
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    if (window.scrollY > 0) {
+        scrollToTopBtn.classList.add('show');
+        scrollToTopBtn.classList.remove('hide');
+    } else {
+        scrollToTopBtn.classList.add('hide');
+        scrollToTopBtn.classList.remove('show');
+    }
+});
+
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
 
 
 function setBackgroundColor(pokemon, i) {
@@ -262,93 +406,6 @@ function setBackgroundColor(pokemon, i) {
     }
 }
 
-
-function createCanvas(backgroundColor, i) {
-    const ctx = document.getElementById('statChart');
-    currentPokemon = allPokemons[i];
-    const hp = currentPokemon['stats'][0]['base_stat'];
-    const attack = currentPokemon['stats'][1]['base_stat'];
-    const defense = currentPokemon['stats'][2]['base_stat'];
-    const spAttack = currentPokemon['stats'][3]['base_stat'];
-    const spDefense = currentPokemon['stats'][4]['base_stat'];
-    const speed = currentPokemon['stats'][5]['base_stat'];
-    const newBackground = adjustRgbaOpacity(backgroundColor, 0.8);
-
-    const data = {
-        labels: [
-            'HP',
-            'Attack',
-            'Defense',
-            'Sp. Attack',
-            'Sp. Defense',
-            'Speed',
-        ],
-        datasets: [{
-            label: 'Base stats',
-            data: [hp, attack, defense, spAttack, spDefense, speed],
-            fill: true,
-            backgroundColor: `${newBackground}`,
-            borderColor: `${backgroundColor}`,
-            pointBackgroundColor: `${backgroundColor}`,
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgb(255, 99, 132)'
-        }]
-    };
-    new Chart(ctx, {
-        type: 'radar',
-        data: data,
-        options: {
-            scales: {
-                r: {
-                    suggestedMin: 50,
-                    suggestedMax: 100
-                }
-            }
-        }
-    });
-}
-
-function adjustRgbaOpacity(rgbColor, opacity) {
-    // Extrahieren der RGB-Komponenten und der aktuellen Opacity
-    const match = rgbColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-
-    if (!match) {
-        throw new Error('Ungültiger RGBA-Farbcode. Erwartet wird ein Format wie "rgba(r, g, b, a)".');
-    }
-
-    const r = parseInt(match[1]);
-    const g = parseInt(match[2]);
-    const b = parseInt(match[3]);
-    const currentOpacity = parseFloat(match[4]);
-
-    // Anpassen der Opacity auf 0.8 (maximal 1, mindestens 0)
-    const newOpacity = Math.min(1, Math.max(0, opacity));
-
-    // Zusammenstellen des neuen RGBA-Strings
-    return `rgba(${r}, ${g}, ${b}, ${newOpacity})`;
-}
-
-
-// Zeige den Button erst, wenn der Benutzer heruntergescrollt hat
-window.addEventListener('scroll', function () {
-    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-    if (window.scrollY > 0) {
-        scrollToTopBtn.classList.add('show');
-        scrollToTopBtn.classList.remove('hide');
-    } else {
-        scrollToTopBtn.classList.add('hide');
-        scrollToTopBtn.classList.remove('show');
-    }
-});
-
-// Funktion, die zum Anfang der Seite scrollt
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
 
 
 

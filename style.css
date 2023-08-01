@@ -3,7 +3,6 @@ body {
     font-family: roboto, sans-serif;
 }
 
-
 .headline {
     width: 100%;
     height: 100px;
@@ -46,7 +45,6 @@ body {
     width: 100%;
     margin-top: 64px;
 }
-
 
 .pokemonCell {
     height: 400px;
@@ -232,15 +230,15 @@ img#scrollToTopBtn {
     transition: opacity 0.3s ease-in-out;
 }
 
-img#scrollToTopBtn.show {
+.show {
     opacity: 1;
 }
 
-img#scrollToTopBtn.hide {
+.hide {
     opacity: 0;
 }
 
-.loadPokemon {
+.loadPokemonBtn {
     height: 48px;
     width: 128px;
     background-color: red;
@@ -264,7 +262,6 @@ img#scrollToTopBtn.hide {
 .loadPokemon:hover{
     background-color: #4d4d4d;
 }
-
 
 /* width */
 ::-webkit-scrollbar {
