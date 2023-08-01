@@ -17,7 +17,7 @@ async function loadPokemon() {
 
 function renderPokemon() {
     let pokemonContainer = document.getElementById('pokemonContainer');
-    for (let i = min-1; i < max-1; i++) {
+    for (let i = min - 1; i < max - 1; i++) {
         console.log(i)
         let currentPokemon = allPokemons[i];
         let pokemonName = (currentPokemon['name']).charAt(0).toUpperCase() + (currentPokemon['name']).slice(1);
@@ -25,10 +25,10 @@ function renderPokemon() {
         let number = ("000" + (i + 1)).slice(-3);
         pokemonContainer.innerHTML += `
         <div id="pokemon${i}" class="pokemonCell" onclick="showInfo(${i})">
-            <h2>${pokemonName}</h2>
+            <h2 id="name${i}">${pokemonName}</h2>
             <img class="pokemonImg" src="${imgUrl}">
             <div class="types" id="types${i}"></div>
-            <h3>#${number}</h3>
+            <h3 id="id${i}">#${number}</h3>
         </div>
         `
         for (let j = 0; j < currentPokemon['types'].length; j++) {
@@ -42,9 +42,34 @@ function renderPokemon() {
     }
 }
 
+
+
+
 function searchPokemon() {
+    let loadBtn = document.getElementById('loadBtn');
     const searchInput = document.getElementById('search').value.toLowerCase();
+    if (searchInput.length != 0) {
+        loadBtn.style.display = 'none';
+        for (let i = 0; i < allPokemons.length; i++) {
+            let pokemonName = document.getElementById(`name${i}`).innerHTML.toLowerCase();
+            if (!pokemonName.startsWith(searchInput)) {
+                let pokemonCell = document.getElementById(`pokemon${i}`);
+                pokemonCell.style.display = 'none';
+            } else {
+                    let pokemonCell = document.getElementById(`pokemon${i}`);
+                    pokemonCell.style.display = 'flex';
+            }
+        }
+    }
+    else {
+        loadBtn.style.display = 'block';
+        for (let i = 0; i < allPokemons.length; i++) {
+            let pokemonCell = document.getElementById(`pokemon${i}`);
+            pokemonCell.style.display = 'flex';
+        }
+    }
 }
+
 
 function showInfo(i) {
     let pokemonInfoContainer = document.getElementById('infoContainer');
@@ -74,25 +99,25 @@ function showInfo(i) {
     createCanvas(backgroundColor, i);
 }
 
-function loadMore(){
+function loadMore() {
     min = min + 19;
     max = max + 19;
     loadPokemon();
 }
 
 
-function setNextBtn(i){
+function setNextBtn(i) {
     if ((i + 1) === allPokemons.length) {
         i = 0;
     }
     let next = document.getElementById('next');
-    let nextPokemon = allPokemons[i+1];
+    let nextPokemon = allPokemons[i + 1];
     next.innerHTML = `${(nextPokemon['name']).charAt(0).toUpperCase() + (nextPokemon['name']).slice(1)}`;
     if (i === 0) {
         i = allPokemons.length;
     }
     let last = document.getElementById('back');
-    let lastPokemon = allPokemons[i-1];
+    let lastPokemon = allPokemons[i - 1];
     last.innerHTML = `${(lastPokemon['name']).charAt(0).toUpperCase() + (lastPokemon['name']).slice(1)}`;
 }
 
@@ -105,15 +130,15 @@ function closeInfo() {
     const canvas = document.getElementById('statChart');
     canvas.remove();
     let stats = document.getElementById('stats');
-    stats.innerHTML +=`<canvas width="200px" height="200px" id="statChart"></canvas>`;
+    stats.innerHTML += `<canvas width="200px" height="200px" id="statChart"></canvas>`;
 }
 
 
-function goNext(currentPokemon){
+function goNext(currentPokemon) {
     const canvas = document.getElementById('statChart');
     canvas.remove();
     let stats = document.getElementById('stats');
-    stats.innerHTML +=`<canvas width="200px" height="200px" id="statChart"></canvas>`;
+    stats.innerHTML += `<canvas width="200px" height="200px" id="statChart"></canvas>`;
     let i = currentPokemon['id'] - 1;
     if ((i + 1) === allPokemons.length) {
         i = -1;
@@ -121,11 +146,11 @@ function goNext(currentPokemon){
     showInfo(i + 1);
 }
 
-function goBack(currentPokemon){
+function goBack(currentPokemon) {
     const canvas = document.getElementById('statChart');
     canvas.remove();
     let stats = document.getElementById('stats');
-    stats.innerHTML +=`<canvas width="200px" height="200px" id="statChart"></canvas>`;
+    stats.innerHTML += `<canvas width="200px" height="200px" id="statChart"></canvas>`;
     let i = currentPokemon['id'] - 1;
     if (i === 0) {
         i = allPokemons.length;
@@ -229,6 +254,12 @@ function setBackgroundColor(pokemon, i) {
             banner[i].style.backgroundColor = "#3199c9";
         }
     }
+    if (type === 'fairy') {
+        pokemonCell.style.backgroundColor = "#e1c0b5";
+        for (let i = 0; i < banner.length; i++) {
+            banner[i].style.backgroundColor = "#d1ab9f";
+        }
+    }
 }
 
 
@@ -296,6 +327,27 @@ function adjustRgbaOpacity(rgbColor, opacity) {
 
     // Zusammenstellen des neuen RGBA-Strings
     return `rgba(${r}, ${g}, ${b}, ${newOpacity})`;
+}
+
+
+// Zeige den Button erst, wenn der Benutzer heruntergescrollt hat
+window.addEventListener('scroll', function () {
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    if (window.scrollY > 0) {
+        scrollToTopBtn.classList.add('show');
+        scrollToTopBtn.classList.remove('hide');
+    } else {
+        scrollToTopBtn.classList.add('hide');
+        scrollToTopBtn.classList.remove('show');
+    }
+});
+
+// Funktion, die zum Anfang der Seite scrollt
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 }
 
 

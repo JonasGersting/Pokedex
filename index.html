@@ -33,11 +33,14 @@
         </div>
     </div>
     <div class="headline">
-        <h1>Pokedex</h1>
-        <input type="text" placeholder="Suche" id="search" oninput="searchPokemon()">
+        <h1>Pokèdex</h1>
+        <input type="text" placeholder="Suche ein Pokèmon" id="search" oninput="searchPokemon()">
     </div>
     <div id="pokemonContainer"></div>
-    <button onclick="loadMore()">weiter Pokemon laden</button>
+    <div class="centerLoadBtn">
+        <button id="loadBtn" class="loadPokemon" onclick="loadMore()">Load Pokèmon</button>
+    </div>
+    <img src="img/top.png" id="scrollToTopBtn" onclick="scrollToTop()"></img>
 </body>
 
 </html>
