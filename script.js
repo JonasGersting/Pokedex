@@ -1,5 +1,6 @@
 let currentPokemon;
 allPokemons = [];
+let currentEvolutionChain = [];
 let min = 1;
 let max = 20;
 let url = 'https://pokeapi.co/api/v2/pokemon/';
@@ -17,11 +18,11 @@ async function loadPokemon() {
     loadingOverlay.style.display = 'none';
     let top = document.getElementById('headContainer');
     let bottom = document.getElementById('bottomContainer');
-    setTimeout(function() {
+    setTimeout(function () {
         top.style.height = '60px'
         bottom.style.height = '60px'
     }, 500);
-   
+
     renderPokemon();
 }
 
@@ -105,6 +106,7 @@ function displayBasicInfo(pokemon, i) {
     const backgroundColor = document.getElementById(`pokemon${i}`).style.backgroundColor;
     const infoTop = document.getElementById('infoTop');
     infoTop.style.backgroundColor = backgroundColor;
+    setEvolutionBtn(i);
     setNextBtn(i);
     setBackBtn(i);
 }
@@ -183,7 +185,6 @@ function setNextBtn(i) {
     let next = document.getElementById('next');
     let nextPokemon = allPokemons[i + 1];
     next.innerHTML = `${(nextPokemon['name']).charAt(0).toUpperCase() + (nextPokemon['name']).slice(1)}`;
-
 }
 
 
@@ -210,6 +211,7 @@ function closeInfo() {
 
 
 function goNext(currentPokemon) {
+    toggleStatOrEvolution('stats');
     const canvas = document.getElementById('statChart');
     canvas.remove();
     let stats = document.getElementById('stats');
@@ -223,6 +225,7 @@ function goNext(currentPokemon) {
 
 
 function goBack(currentPokemon) {
+    toggleStatOrEvolution('stats');
     const canvas = document.getElementById('statChart');
     canvas.remove();
     let stats = document.getElementById('stats');
@@ -232,6 +235,16 @@ function goBack(currentPokemon) {
         i = allPokemons.length;
     }
     showInfo(i - 1);
+}
+
+
+async function getEvolutionChain(id) {
+    currentEvolutionChain = [];
+    url = `https://pokeapi.co/api/v2/evolution-chain/${id}/`;
+    let response = await fetch(url);
+    evolutionChain = await response.json();
+    currentEvolutionChain.push(evolutionChain);
+    console.log(currentEvolutionChain, id);
 }
 
 
@@ -278,7 +291,7 @@ function createCanvas(backgroundColor, i) {
                     suggestedMax: 100,
                     pointLabels: {
                         font: {
-                            size: 16, // Hier können Sie die Schriftgröße anpassen
+                            size: 20, // Hier können Sie die Schriftgröße anpassen
                         }
                     }
                 }
@@ -423,6 +436,23 @@ function setBackgroundColor(pokemon, i) {
         }
     }
 }
+
+function toggleStatOrEvolution(id, i) {
+    let stats = document.getElementById('stats');
+    let evolution = document.getElementById('evolution');
+    if (id === 'stats') {
+        stats.classList.remove('d-none');
+        evolution.classList.add('d-none');
+    }
+    else {
+        stats.classList.add('d-none');
+        evolution.classList.remove('d-none');
+        getEvolutionChain(i);
+    }
+
+
+}
+
 
 
 

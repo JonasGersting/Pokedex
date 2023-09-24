@@ -29,9 +29,16 @@
             <div id="stats" class="stats">
                 <canvas width="200px" height="200px" id="statChart"></canvas>
             </div>
+            <div id="evolution" class="evolution d-none">
+                Evolution
+            </div>
+            <div class="navigatorTop">
+                <div onclick="toggleStatOrEvolution('stats')" id="1stInfo" class="navBtn infoBtnLeft">Stats</div>
+                <div onclick="toggleStatOrEvolution('evolution', currentPokemon['id'])" id="2ndInfo" class="navBtn infoBtnRight">Evolution</div>
+            </div>
             <div class="navigator">
-                <div onclick="goBack(currentPokemon)" id="back" class="navBtn navBtnLeft">links</div>
-                <div onclick="goNext(currentPokemon)" id="next" class="navBtn navBtnRight">rechts</div>
+                <div onclick="goBack(currentPokemon)" id="back" class="navBtn navBtnLeft"></div>
+                <div onclick="goNext(currentPokemon)" id="next" class="navBtn navBtnRight"></div>
             </div>
         </div>
     </div>
