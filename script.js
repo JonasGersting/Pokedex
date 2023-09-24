@@ -5,12 +5,23 @@ let max = 20;
 let url = 'https://pokeapi.co/api/v2/pokemon/';
 
 async function loadPokemon() {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    loadingOverlay.style.display = 'flex'; // Zeige das Overlay an
     for (let i = min; i < max; i++) {
         url = `https://pokeapi.co/api/v2/pokemon/${i}`;
         let response = await fetch(url);
         currentPokemon = await response.json();
         allPokemons.push(currentPokemon);
     }
+    // Verberge das Overlay, nachdem die Pokémon geladen sind
+    loadingOverlay.style.display = 'none';
+    let top = document.getElementById('headContainer');
+    let bottom = document.getElementById('bottomContainer');
+    setTimeout(function() {
+        top.style.height = '60px'
+        bottom.style.height = '60px'
+    }, 500);
+   
     renderPokemon();
 }
 
@@ -145,7 +156,7 @@ function changeDNone() {
 }
 
 
-function changeBanner(i){
+function changeBanner(i) {
     let typesBackgroundColor = document.getElementById(`types${i}`).firstElementChild.style.backgroundColor;
     let typeBanner = document.getElementById('infoTypes');
     typeBanner.innerHTML = '';
@@ -167,7 +178,7 @@ function loadMore() {
 
 function setNextBtn(i) {
     if ((i + 1) === allPokemons.length) {
-        i = 0;
+        i = -1;
     }
     let next = document.getElementById('next');
     let nextPokemon = allPokemons[i + 1];
@@ -194,7 +205,7 @@ function closeInfo() {
     const canvas = document.getElementById('statChart');
     canvas.remove();
     let stats = document.getElementById('stats');
-    stats.innerHTML += `<canvas width="200px" height="200px" id="statChart"></canvas>`;
+    stats.innerHTML += `<canvas class="statCanvas" id="statChart"></canvas>`;
 }
 
 
@@ -202,7 +213,7 @@ function goNext(currentPokemon) {
     const canvas = document.getElementById('statChart');
     canvas.remove();
     let stats = document.getElementById('stats');
-    stats.innerHTML += `<canvas width="200px" height="200px" id="statChart"></canvas>`;
+    stats.innerHTML += `<canvas class="statCanvas" id="statChart"></canvas>`;
     let i = currentPokemon['id'] - 1;
     if ((i + 1) === allPokemons.length) {
         i = -1;
@@ -215,13 +226,15 @@ function goBack(currentPokemon) {
     const canvas = document.getElementById('statChart');
     canvas.remove();
     let stats = document.getElementById('stats');
-    stats.innerHTML += `<canvas width="200px" height="200px" id="statChart"></canvas>`;
+    stats.innerHTML += `<canvas class="statCanvas" id="statChart"></canvas>`;
     let i = currentPokemon['id'] - 1;
     if (i === 0) {
         i = allPokemons.length;
     }
     showInfo(i - 1);
 }
+
+
 
 
 function createCanvas(backgroundColor, i) {
@@ -240,7 +253,7 @@ function createCanvas(backgroundColor, i) {
             'Attack',
             'Defense',
             'Sp. Attack',
-            'Sp. Defense',
+            'Sp. Def',
             'Speed',
         ],
         datasets: [{
@@ -252,7 +265,7 @@ function createCanvas(backgroundColor, i) {
             pointBackgroundColor: `${backgroundColor}`,
             pointBorderColor: '#fff',
             pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgb(255, 99, 132)'
+            pointHoverBorderColor: 'rgb(255, 99, 132)',
         }]
     };
     new Chart(ctx, {
@@ -262,7 +275,12 @@ function createCanvas(backgroundColor, i) {
             scales: {
                 r: {
                     suggestedMin: 50,
-                    suggestedMax: 100
+                    suggestedMax: 100,
+                    pointLabels: {
+                        font: {
+                            size: 16, // Hier können Sie die Schriftgröße anpassen
+                        }
+                    }
                 }
             }
         }
@@ -271,7 +289,7 @@ function createCanvas(backgroundColor, i) {
 
 
 function adjustRgbaOpacity(rgbColor, opacity) {
-        const match = rgbColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    const match = rgbColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
     if (!match) {
         throw new Error('Ungültiger RGBA-Farbcode. Erwartet wird ein Format wie "rgba(r, g, b, a)".');
     }

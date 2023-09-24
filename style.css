@@ -5,7 +5,7 @@ body {
 
 .headline {
     width: 100%;
-    height: 100px;
+    height: 50vh;
     background: red;
     top: 0;
     display: flex;
@@ -14,6 +14,7 @@ body {
     position: sticky;
     color: white;
     z-index: 1;
+    transition: all 225ms ease-in-out;
 }
 
 .headline:before {
@@ -25,6 +26,27 @@ body {
     border-left: 40px solid transparent;
     width: 25%;
     transform: rotateX(180deg);
+}
+
+.bottom{
+    width: 100%;
+    height: 50vh;
+    background: red;
+    bottom: 0;
+    position: sticky;
+    color: white;
+    z-index: 1;
+}
+
+.bottom:after {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: 0;
+    border-bottom: 40px solid red;
+    border-left: 40px solid transparent;
+    width: 25%;
+    transform: rotatey(180deg);
 }
 
 .pokemonImg {
@@ -199,11 +221,9 @@ h3 {
     border-left: 2px solid white;
 }
 
-canvas {
-    min-height: 200px !important;
-    min-width: 200px !important;
-    max-height: 400px !important;
-    max-width: 900px !important;
+#statChart{
+    height: 400px !important;
+    width: 400px !important;
 }
 
 #stats {
@@ -215,6 +235,7 @@ canvas {
 
 #search {
     height: 32px;
+    outline: none;
     border: none;
     border-radius: 32px;
     padding: 6px;
@@ -222,11 +243,27 @@ canvas {
 
 img#scrollToTopBtn {
     position: fixed;
-    bottom: 20px;
+    bottom: 82px;
     right: 20px;
     padding: 10px;
     cursor: pointer;
     transition: opacity 0.3s ease-in-out;
+}
+
+.left{
+    height: 100%;
+    width: 20px;
+    background-color: red;
+    position: fixed;
+    left: 0;
+}
+
+.right{
+    height: 100%;
+    width: 20px;
+    background-color: red;
+    position: fixed;
+    right: 0;
 }
 
 .show {
@@ -258,7 +295,7 @@ img#scrollToTopBtn {
     margin-bottom: 32px;
 }
 
-.loadPokemon:hover {
+.loadPokemonBtn:hover {
     background-color: #4d4d4d;
 }
 
@@ -287,14 +324,47 @@ img#scrollToTopBtn {
     filter: invert(20%) sepia(0%) saturate(0%) hue-rotate(9deg) brightness(88%) contrast(130%);
 }
 
+#loadingOverlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9); /* Hintergrundfarbe mit Transparenz */
+    z-index: 999; /* Legt die Z-Ebene über allem anderen Inhalt fest */
+  }
+  
+  #loadingSpinner {
+    border: 4px solid rgba(255, 255, 255, 0.3); /* Farbe und Transparenz des äußeren Randes des Spinners */
+    border-top: 4px solid red; /* Farbe des oberen Randes des Spinners */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite; /* Animationsdauer und Art */
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+
 
 @media screen and (max-width:380px) {
     .infoContainer {
-        height: 700px;
+        max-height: 700px;
     }
 
     #infoTypes {
         display: none;
+    }
+
+    #statChart {
+        height: 330px !important;
+        width: 330px !important;
     }
 }
 
