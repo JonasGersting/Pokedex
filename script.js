@@ -4,6 +4,7 @@ let currentEvolutionChain = [];
 let min = 1;
 let max = 20;
 let url = 'https://pokeapi.co/api/v2/pokemon/';
+Chart.defaults.global.legend.display = false;
 
 async function loadPokemon() {
     const loadingOverlay = document.getElementById('loadingOverlay');
@@ -263,15 +264,14 @@ function createCanvas(backgroundColor, i) {
     const data = {
         labels: [
             'HP',
-            'Attack',
-            'Defense',
-            'Sp. Attack',
-            'Sp. Def',
-            'Speed',
+            'DEF',
+            'Sp. DEF',
+            'SPEED',
+            'Sp. ATT',
+            'ATT',
         ],
         datasets: [{
-            label: 'Base stats',
-            data: [hp, attack, defense, spAttack, spDefense, speed],
+            data: [hp, defense, spDefense, speed, spAttack, attack],
             fill: true,
             backgroundColor: `${newBackground}`,
             borderColor: `${backgroundColor}`,
@@ -285,17 +285,23 @@ function createCanvas(backgroundColor, i) {
         type: 'radar',
         data: data,
         options: {
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            },
             scales: {
                 r: {
                     suggestedMin: 50,
                     suggestedMax: 100,
                     pointLabels: {
+                        color: 'black',
                         font: {
                             size: 20, // Hier können Sie die Schriftgröße anpassen
                         }
                     }
                 }
-            }
+            },
         }
     });
 }
