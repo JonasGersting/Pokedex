@@ -153,6 +153,8 @@ h2 {
     z-index: 1000;
     border: 2px solid grey;
     border-radius: 33px;
+    background-color: white;
+    animation: slideInFromBottom 0.5s ease-out; /* Hinzugefügt */
 }
 
 .overlay {
@@ -524,6 +526,10 @@ img#scrollToTopBtn {
     font-size: 16px;
 }
 
+.slideInFromRight {
+    animation: slideInFromRight 0.5s ease-out; /* Dauer und Timing der Animation */
+}
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);
@@ -531,6 +537,28 @@ img#scrollToTopBtn {
 
     100% {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes slideInFromBottom {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInFromRight {
+    0% {
+        transform: translateX(100%); 
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
     }
 }
 

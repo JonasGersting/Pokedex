@@ -151,10 +151,10 @@ function createCanvasForPokemon(pokemon, i) {
 function changeDNone() {
     let pokemonInfoContainer = document.getElementById('infoContainer');
     pokemonInfoContainer.classList.remove('d-none');
+    pokemonInfoContainer.style.animation = 'slideInFromBottom 0.5s ease-out'; // Animation aktivieren
     let overlay = document.getElementById('overlay');
     overlay.classList.remove('d-none');
     document.body.style.overflow = 'hidden';
-
 }
 
 
@@ -200,6 +200,7 @@ function setBackBtn(i) {
 
 function closeInfo() {
     let pokemonInfoContainer = document.getElementById('infoContainer');
+    pokemonInfoContainer.style.animation = ''; // Animation entfernen
     pokemonInfoContainer.classList.add('d-none');
     let overlay = document.getElementById('overlay');
     overlay.classList.add('d-none');
@@ -223,6 +224,7 @@ function goNext(currentPokemon) {
         i = -1;
     }
     showInfo(i + 1);
+    triggerSlideIn();
 }
 
 
@@ -238,6 +240,14 @@ function goBack(currentPokemon) {
         i = allPokemons.length;
     }
     showInfo(i - 1);
+    triggerSlideIn();
+}
+
+function triggerSlideIn() {
+    const infoImg = document.getElementById('infoImg');
+    infoImg.classList.remove('slideInFromRight'); 
+    void infoImg.offsetWidth; 
+    infoImg.classList.add('slideInFromRight');
 }
 
 
