@@ -4,10 +4,16 @@ let currentEvolutionChain = [];
 let min = 1;
 let max = 20;
 let url = 'https://pokeapi.co/api/v2/pokemon/';
-Chart.defaults.global.legend.display = false;
+window.onload = function () {
+    window.addEventListener('scroll', handleScroll);
+}
+
 
 async function loadPokemon() {
     const loadingOverlay = document.getElementById('loadingOverlay');
+    if (min > 1) {
+        loadingOverlay.style.zIndex = '997';
+    }
     loadingOverlay.style.display = 'flex'; // Zeige das Overlay an
     for (let i = min; i < max; i++) {
         url = `https://pokeapi.co/api/v2/pokemon/${i}`;
@@ -23,7 +29,6 @@ async function loadPokemon() {
         top.style.height = '60px'
         bottom.style.height = '60px'
     }, 500);
-
     renderPokemon();
 }
 
@@ -85,14 +90,23 @@ function searchPokemon() {
 }
 
 function showInfo(i) {
-    const pokemonInfoContainer = document.getElementById('infoContainer');
-    pokemonInfoContainer.classList.remove('d-none');
-    const overlay = document.getElementById('overlay');
-    overlay.classList.remove('d-none');
+    toggleStatOrEvolution('stats', i);
+    currentEvolutionChain = [];
+    changeDNone();
     currentPokemon = allPokemons[i];
-    displayBasicInfo(currentPokemon, i);
-    displayTypeBanners(currentPokemon, i);
-    createCanvasForPokemon(currentPokemon, i);
+    const name = document.getElementById('infoName');
+    name.innerHTML = (currentPokemon['name']).charAt(0).toUpperCase() + (currentPokemon['name']).slice(1);
+    const infoNumber = document.getElementById('infoNumber');
+    infoNumber.innerHTML = `#${("000" + (i + 1)).slice(-3)}`;
+    const infoImg = document.getElementById('infoImg');
+    infoImg.src = currentPokemon['sprites']['other']['official-artwork']['front_default'];
+    const backgroundColor = document.getElementById(`pokemon${i}`).style.backgroundColor;
+    const infoTop = document.getElementById('infoTop');
+    infoTop.style.backgroundColor = `${backgroundColor}`;
+    setNextBtn(i);
+    setBackBtn(i);
+    changeBanner(i);
+    createCanvas(backgroundColor, i);
 }
 
 
@@ -132,23 +146,6 @@ function createCanvasForPokemon(pokemon, i) {
 }
 
 
-function showInfo(i) {
-    changeDNone();
-    currentPokemon = allPokemons[i];
-    let name = document.getElementById('infoName');
-    name.innerHTML = (currentPokemon['name']).charAt(0).toUpperCase() + (currentPokemon['name']).slice(1);
-    let infoNumber = document.getElementById('infoNumber');
-    infoNumber.innerHTML = `#${("000" + (i + 1)).slice(-3)}`;
-    let infoImg = document.getElementById('infoImg');
-    infoImg.src = currentPokemon['sprites']['other']['official-artwork']['front_default'];
-    let backgroundColor = document.getElementById(`pokemon${i}`).style.backgroundColor;
-    let infoTop = document.getElementById('infoTop');
-    infoTop.style.backgroundColor = `${backgroundColor}`;
-    setNextBtn(i);
-    setBackBtn(i);
-    changeBanner(i);
-    createCanvas(backgroundColor, i);
-}
 
 
 function changeDNone() {
@@ -156,6 +153,8 @@ function changeDNone() {
     pokemonInfoContainer.classList.remove('d-none');
     let overlay = document.getElementById('overlay');
     overlay.classList.remove('d-none');
+    document.body.style.overflow = 'hidden';
+
 }
 
 
@@ -204,6 +203,7 @@ function closeInfo() {
     pokemonInfoContainer.classList.add('d-none');
     let overlay = document.getElementById('overlay');
     overlay.classList.add('d-none');
+    document.body.style.overflow = 'auto';
     const canvas = document.getElementById('statChart');
     canvas.remove();
     let stats = document.getElementById('stats');
@@ -213,6 +213,7 @@ function closeInfo() {
 
 function goNext(currentPokemon) {
     toggleStatOrEvolution('stats');
+    currentEvolutionChain = [];
     const canvas = document.getElementById('statChart');
     canvas.remove();
     let stats = document.getElementById('stats');
@@ -227,6 +228,7 @@ function goNext(currentPokemon) {
 
 function goBack(currentPokemon) {
     toggleStatOrEvolution('stats');
+    currentEvolutionChain = [];
     const canvas = document.getElementById('statChart');
     canvas.remove();
     let stats = document.getElementById('stats');
@@ -237,18 +239,6 @@ function goBack(currentPokemon) {
     }
     showInfo(i - 1);
 }
-
-
-async function getEvolutionChain(id) {
-    currentEvolutionChain = [];
-    url = `https://pokeapi.co/api/v2/evolution-chain/${id}/`;
-    let response = await fetch(url);
-    evolutionChain = await response.json();
-    currentEvolutionChain.push(evolutionChain);
-    console.log(currentEvolutionChain, id);
-}
-
-
 
 
 function createCanvas(backgroundColor, i) {
@@ -321,16 +311,16 @@ function adjustRgbaOpacity(rgbColor, opacity) {
 }
 
 
-window.addEventListener('scroll', function () {
+
+
+function handleScroll() {
     const scrollToTopBtn = document.getElementById('scrollToTopBtn');
     if (window.scrollY > 0) {
-        scrollToTopBtn.classList.add('show');
         scrollToTopBtn.classList.remove('hide');
     } else {
         scrollToTopBtn.classList.add('hide');
-        scrollToTopBtn.classList.remove('show');
     }
-});
+}
 
 
 function scrollToTop() {
@@ -453,10 +443,67 @@ function toggleStatOrEvolution(id, i) {
     else {
         stats.classList.add('d-none');
         evolution.classList.remove('d-none');
-        getEvolutionChain(i);
+        searchEvolution(i);
+    }
+}
+
+
+
+
+async function searchEvolution(i) {
+    const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${i}/`;
+    fetch(speciesUrl)
+        .then(response => response.json())
+        .then(data => {
+            const evolutionChainId = data.evolution_chain.url.split('/').filter(Boolean).pop();
+            console.log( 'das ist die evochain', evolutionChainId);
+            getEvolutionChain(evolutionChainId);
+        });
+}
+
+
+async function getEvolutionChain(id) {
+    currentEvolutionChain = [];
+    const url = `https://pokeapi.co/api/v2/evolution-chain/${id}/`;
+    const response = await fetch(url);
+    const evolutionChainData = await response.json();
+
+    let evolution = evolutionChainData.chain;
+    while (evolution) {
+        currentEvolutionChain.push(evolution.species.name);
+        evolution = evolution.evolves_to[0];
     }
 
+    await fetchEvolutionSprites(); 
+    renderEvolutionChain();
+}
 
+async function fetchEvolutionSprites() {
+    for (let i = 0; i < currentEvolutionChain.length; i++) {
+        const name = currentEvolutionChain[i];
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+        const pokemonData = await response.json();
+        currentEvolutionChain[i] = {
+            name: pokemonData.name,
+            image: pokemonData.sprites.other['official-artwork'].front_default
+        };
+    }
+}
+
+function renderEvolutionChain() {
+    const evolutionContainer = document.getElementById('evolution');
+    evolutionContainer.innerHTML = '';
+    currentEvolutionChain.forEach((pokemon, index) => {
+        const formattedName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+        const isLast = index === currentEvolutionChain.length - 1;
+        evolutionContainer.innerHTML += `
+            <div class="evolution-step">
+                <img src="${pokemon.image}" alt="${formattedName}" class="evolution-image">
+                <span class="noTextShadow">${formattedName}</span>
+            </div>
+             ${!isLast ? '<span class="arrow noTextShadow">→</span>' : ''}
+        `;
+    });
 }
 
 

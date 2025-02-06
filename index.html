@@ -33,12 +33,12 @@
                 Evolution
             </div>
             <div class="navigatorTop">
-                <div onclick="toggleStatOrEvolution('stats')" id="1stInfo" class="navBtn infoBtnLeft">Stats</div>
-                <div onclick="toggleStatOrEvolution('evolution', currentPokemon['id'])" id="2ndInfo" class="navBtn infoBtnRight">Evolution</div>
+                <div onclick="toggleStatOrEvolution('stats')" id="1stInfo" class="navBtn fontSize20 infoBtnLeft">Stats</div>
+                <div onclick="toggleStatOrEvolution('evolution', currentPokemon['id'])" id="2ndInfo" class="navBtn fontSize20 infoBtnRight">Evolution</div>
             </div>
             <div class="navigator">
-                <div onclick="goBack(currentPokemon)" id="back" class="navBtn navBtnLeft"></div>
-                <div onclick="goNext(currentPokemon)" id="next" class="navBtn navBtnRight"></div>
+                <div onclick="goBack(currentPokemon)" id="back" class="navBtn fontSize20 navBtnLeft"></div>
+                <div onclick="goNext(currentPokemon)" id="next" class="navBtn fontSize20 navBtnRight"></div>
             </div>
         </div>
     </div>
@@ -51,8 +51,9 @@
     <div id="pokemonContainer"></div>
     <div class="centerLoadBtn">
         <button id="loadBtn" class="loadPokemonBtn" onclick="loadMore()">Load Pokèmon</button>
+        <img src="img/top.png" class="hide" id="scrollToTopBtn" onclick="scrollToTop()"></img>
     </div>
-    <img src="img/top.png" class="hide" id="scrollToTopBtn" onclick="scrollToTop()"></img>
+    
     <div id="bottomContainer" class="bottom"></div>
 </body>
 
