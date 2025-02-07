@@ -28,6 +28,17 @@ function toggleLoadingOverlay(show) {
     if (show && min > 1) loadingOverlay.style.zIndex = '997';
 }
 /**
+ * Watches when the window has been scrolled to show the scoll up button.
+ */
+window.addEventListener('scroll', () => {
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    if (window.scrollY > 0) {
+        scrollToTopBtn.classList.remove('hide'); // Klasse entfernen
+    } else {
+        scrollToTopBtn.classList.add('hide'); // Klasse hinzufügen
+    }
+});
+/**
  * Fetches Pokemon data from the API for a given range and stores the results in the `allPokemons` array.
  * @param {number} min - The starting index for the Pokemon.
  * @param {number} max - The ending index for the Pokemon.
@@ -383,7 +394,7 @@ function goBack(currentPokemon) {
  */
 function triggerSlideIn() {
     const infoImg = document.getElementById('infoImg');
-    infoImg.classList.remove('slideInFromRight'); 
+    infoImg.classList.remove('slideInFromRight');
     void infoImg.offsetWidth; // Triggers reflow to reset animation
     infoImg.classList.add('slideInFromRight');
 }
@@ -600,7 +611,7 @@ async function getEvolutionChain(id) {
         currentEvolutionChain.push(evolution.species.name);
         evolution = evolution.evolves_to[0];
     }
-    await fetchEvolutionSprites(); 
+    await fetchEvolutionSprites();
     renderEvolutionChain();
 }
 /**
